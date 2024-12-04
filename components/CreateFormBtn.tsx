@@ -12,7 +12,7 @@ import {
 } from './ui/dialog';
 import { formSchema, formSchemaType } from '@/schemas/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader } from 'lucide-react';
+import { FilePlus, Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
@@ -26,17 +26,30 @@ import {
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { CreateForm } from '@/actions/form';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 
 const CreateFormBtn = () => {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+    },
   });
 
   async function onSubmit(values: formSchemaType) {
     try {
       const formId = await CreateForm(values);
       toast.success('Form created successfully');
-      console.log("Form ID: ", formId);
+      console.log(formId);
+      form.reset();
+      setOpen(false);
+      router.push(`/builder/${formId}`);
+      
     } catch (error) {
       toast.error('Something went wrong. Please try again later');
       console.log(error);
@@ -44,9 +57,12 @@ const CreateFormBtn = () => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-6">Create new form</Button>
+        <Button variant={'outline'} className="ml-6 group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4">
+        <FilePlus className="size-10 dark:stroke-white group-hover:text-primary"/>
+          <p className="font-bold text-lg text-muted-foreground">Create new form</p>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
