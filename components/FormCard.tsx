@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 function FormCard({form}: {form: Form}) {
   return (
-    <Card>
+    <Card className="shadow-md shadow-violet-600">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 justify-between">
           <span className="font-bold truncate">
