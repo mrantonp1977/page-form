@@ -5,7 +5,8 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { shadesOfPurple } from '@clerk/themes';
 import { Toaster } from '@/components/ui/toaster';
 import DesignerContextProvider from '@/components/context/DesignerContext';
-import  {Poppins}  from 'next/font/google';
+import { Poppins }  from 'next/font/google';
+import NextTopLoader from "nextjs-toploader"
 
 
 const poppins = Poppins({
@@ -33,6 +34,7 @@ export default function RootLayout({
         <body
           className={`${poppins.className}`}
         >
+          <NextTopLoader />
           <DesignerContextProvider>
             <ThemeProvider
               attribute="class"

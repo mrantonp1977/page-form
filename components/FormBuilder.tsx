@@ -75,7 +75,7 @@ function FormBuilder({ form }: { form: Form }) {
               🎉Form Published!!🎉
             </h1>
             <h2 className="text-2xl">Share this form</h2>
-            <h3 className="text-xl text-muted-foreground border-b pb-10">
+            <h3 className="text-lg text-muted-foreground border-b pb-10">
               Anyone with this link can access the form and submit responses
             </h3>
             <div className="my-4 flex flex-col gap-2 items-center w-full border-b pb-4">

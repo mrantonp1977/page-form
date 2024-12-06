@@ -9,7 +9,7 @@ interface StatsCardProps {
   loading: boolean
 };
 
-const StatsCards = ({ data, loading }: StatsCardProps) => {
+export const StatsCards = ({ data, loading }: StatsCardProps) => {
   return (
     <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-8">
       <StatsCard 

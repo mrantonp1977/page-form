@@ -26,11 +26,11 @@ function FormCard({form}: {form: Form}) {
           {formatDistance(form.createdAt, new Date(), { addSuffix: true })}
           {form.published && (
             <span className="flex items-center gap-2">
-              <EyeIcon className="text-muted-foreground" />
+              <EyeIcon className="size-4 text-muted-foreground" />
               <span>
                 {form.visits.toLocaleString()}
               </span>
-              <WrapText className="text-muted-foreground" />
+              <WrapText className="size-4 text-muted-foreground" />
               <span>
                 {form.submissions.toLocaleString()}
               </span>
