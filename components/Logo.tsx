@@ -10,7 +10,7 @@ function Logo() {
     >
       <div className="flex flex-row items-center justify-center gap-2">
         <BookOpen className="w-8 h-8 stroke-purple-600" />
-        PageForm
+        PapdevForms 
       </div>
     </Link>
   );

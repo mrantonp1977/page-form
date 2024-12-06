@@ -14,7 +14,7 @@ import { formSchema, formSchemaType } from '@/schemas/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePlus, Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -31,6 +31,7 @@ import { useState } from 'react';
 
 
 const CreateFormBtn = () => {
+  const {toast} = useToast();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const form = useForm<formSchemaType>({
@@ -44,14 +45,20 @@ const CreateFormBtn = () => {
   async function onSubmit(values: formSchemaType) {
     try {
       const formId = await CreateForm(values);
-      toast.success('Form created successfully');
+      toast({
+        title: 'Form created successfully',
+        variant: 'default',
+      });
       console.log(formId);
       form.reset();
       setOpen(false);
       router.push(`/builder/${formId}`);
       
     } catch (error) {
-      toast.error('Something went wrong. Please try again later');
+      toast({
+        title: 'Failed to create form',
+        variant: 'destructive',
+      });
       console.log(error);
     }
   }
