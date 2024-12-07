@@ -24,7 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 
 function FormBuilder({ form }: { form: Form }) {
   const { toast } = useToast();
-  const { setElements } = useDesigner();
+  const { setElements, setSelectedElement } = useDesigner();
   const [isReady, setIsReady] = React.useState(false);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -45,10 +45,11 @@ function FormBuilder({ form }: { form: Form }) {
     if (isReady) return;
     const elements = JSON.parse(form.content);
     setElements(elements);
+    setSelectedElement(null)
     const readyTimeout = setTimeout(() => setIsReady(true), 1000);
 
     return () => clearTimeout(readyTimeout);
-  }, [form, setElements, isReady]);
+  }, [form, setElements, isReady, setSelectedElement]);
 
   if (!isReady) {
     return (

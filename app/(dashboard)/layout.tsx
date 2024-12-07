@@ -10,7 +10,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <Logo />
         <div className="flex gap-4 items-center">
           <ModeToggle />
-          <UserButton afterSignOutUrl="/sign-in" />
+          <UserButton />
         </div>
       </nav>
       <main className="flex w-full flex-grow">{children}</main>

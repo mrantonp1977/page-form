@@ -2,15 +2,22 @@ import { GetFormById, GetFormWithSubmissions } from '@/actions/form';
 import { ElementsType, FormElementInstance } from '@/components/FormElements';
 import FormLinkShare from '@/components/FormLinkShare';
 import StatsCard from '@/components/StatsCard';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import VisitBtn from '@/components/VisitBtn';
 import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
-import { formatDistance } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
 import { EyeIcon, MousePointerClick, Waypoints, WrapText } from 'lucide-react';
 import React from 'react';
-
-
 
 async function FormDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -98,7 +105,6 @@ async function FormDetailPage({ params }: { params: { id: string } }) {
 
 export default FormDetailPage;
 
-
 type Row = {
   [key: string]: string;
 } & { submittedAt: Date };
@@ -121,7 +127,12 @@ async function SubmissionsTable({ id }: { id: number }) {
 
   formElements.forEach((element) => {
     switch (element.type) {
-      case "TextField":
+      case 'TextField':
+      case 'NumberField':
+      case 'TextAreaField':
+      case 'DateField':
+      case 'SelectField':
+      case 'CheckboxField':
         columns.push({
           id: element.id,
           label: element.extraAttributes?.label as string,
@@ -129,8 +140,8 @@ async function SubmissionsTable({ id }: { id: number }) {
           type: element.type,
         });
         break;
-        default:
-          break;
+      default:
+        break;
     }
   });
 
@@ -140,59 +151,64 @@ async function SubmissionsTable({ id }: { id: number }) {
     rows.push({
       ...content,
       submittedAt: submission.createdAt,
-    })
-  }) 
-    
-
+    });
+  });
 
   return (
     <>
-      <h1 className="text-2xl font-bold my-4">
-        Submissions
-      </h1>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableHead key={column.id} className="uppercase">
-                    {column.label}
-                  </TableHead>
-                ))}
-                <TableHead className="text-muted-foreground text-right uppercase">
-                  Submitted at
+      <h1 className="text-2xl font-bold my-4">Submissions</h1>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id} className="uppercase">
+                  {column.label}
                 </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((row, index) => (
-                <TableRow key={index}>
-                  {columns.map((column) => (
-                    <RowCell 
-                      key={column.id} 
-                      value={row[column.id]} 
-                      type={column.type}              
-                    />
-                  ))}
-                  <TableCell className="text-muted-foreground text-right">
-                    {formatDistance(row.submittedAt, new Date(), {
-                      addSuffix: true,
-                    })}
-                  </TableCell>
-                </TableRow>
               ))}
-            </TableBody>
-          </Table>
-        </div>     
+              <TableHead className="text-muted-foreground text-right uppercase">
+                Submitted at
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                {columns.map((column) => (
+                  <RowCell
+                    key={column.id}
+                    value={row[column.id]}
+                    type={column.type}
+                  />
+                ))}
+                <TableCell className="text-muted-foreground text-right">
+                  {formatDistance(row.submittedAt, new Date(), {
+                    addSuffix: true,
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </>
-  )
+  );
 }
 
-function RowCell({type, value}: { type: ElementsType, value: string }) {
+function RowCell({ type, value }: { type: ElementsType; value: string }) {
   let node: React.ReactNode = value;
-  return (
-    <TableCell>
-      {node}
-    </TableCell>
-  )
+
+  switch (type) {
+    case 'DateField':
+      if (!value) break;
+      const date = new Date(value);
+      node = <Badge variant={'outline'}>{format(date, 'dd-MM-yyyy')}</Badge>;
+      break;
+    case 'CheckboxField':
+      const checked = value === 'true';
+      node = <Checkbox checked={checked} disabled />;
+      break;
+  }
+
+  return <TableCell>{node}</TableCell>;
 }

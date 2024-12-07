@@ -3,12 +3,13 @@
 import prisma from "@/lib/prisma";
 import { formSchema, formSchemaType } from "@/schemas/form";
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export async function GetFormStats() {
   const user = await currentUser();
 
   if (!user) {
-    throw new Error("User not found");
+    redirect("/sign-in");
   }
 
   const stats = prisma.form.aggregate({
