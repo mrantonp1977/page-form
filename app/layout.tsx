@@ -15,7 +15,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'PapDev Forms',
+  title: 'PapDevForms',
   description: 'PapDev Forms is a form builder that allows you to create forms with ease.',
 };
 
